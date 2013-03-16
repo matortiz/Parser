@@ -1,11 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="main.css">
 	<script src="jquery.min.js"></script>
 	<script src="jquery.rest.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('#searchBtn').click( function() {
+				trelloParser.loadFile()
+			});
+
+			$(".details").click(function(){
+				$(this).parent().siblings('ul').toggle();
+				$(this).text(($(this).text() === '+') ? '-' : '+');
+			});
+		});
+	</script>
 	<title>Parser for Trello</title>
 </head>
 <body>
+	<section id='mainContainer'>
+		<input type="text" class="searchBox" name="search">
+		<input type="button" value="go" id="searchBtn">
+		<section class="results">
+			<article>
+				<h3>El titulo del checklist <span class="details">-</span></h3>
+				<ul>
+					<li>Alguna Cosa</li>
+					<li>Alguna Cosa</li>
+					<li>Alguna Cosa</li>
+					<li>Alguna Cosa</li>
+					<li>Alguna Cosa</li>
+					<li>Alguna Cosa</li>
+				</ul>
+			</article>
+		</section>
+	</section>
 	<script src="parser.js"></script>
 </body>
 </html>

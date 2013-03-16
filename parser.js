@@ -13,7 +13,7 @@ var trelloParser = {
 				trelloParser.items.push('<li><h3>' + key + '</h3></li>');
 				trelloParser.fillData(val != 'null' ? val : key);
 			} else {
-				if(val === ' fabianemsantos')
+				//if(val === 'fabianemsantos')
 					trelloParser.items.push('<li id="' + key + '">' + key + ': ' + val + '</li>');
 			}
 		});
@@ -26,8 +26,3 @@ var trelloParser = {
 		}).appendTo('body');	
 	}
 };
-
-$(document).ready(function(){
-	trelloParser.loadFile();	
-});
-
