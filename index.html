@@ -9,7 +9,8 @@
 		$(document).ready(function(){
 			//trelloParser.init();
 			$('#searchBtn').click( function() {
-				trelloParser.parseSearchString()
+				//trelloParser.parseSearchString();
+				trelloParser.init();
 			});
 
 			$(".details").click(function(){
@@ -24,6 +25,10 @@
 	<section id='mainContainer'>
 		<input type="text" class="searchBox" name="search">
 		<input type="button" value="go" id="searchBtn">
+        <div>
+           <h4>Organization: <span id="orgTitle"></span></h4>
+           <h4>Board: <span id="boardTitle"></span></h4>
+        </div>
 		<section class="results">
 			<div>
 				<h3>El titulo del checklist <span class="details">-</span></h3>

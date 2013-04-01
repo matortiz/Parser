@@ -28,6 +28,8 @@ var trelloParser = {
 		//Trello.deauthorize();
 		if(!Trello.authorized())
 			Trello.authorize({type : 'popup', success: trelloParser.authorizeOk});
+
+		trelloParser.parseSearchString();
 		
 		//boards = Trello.get({'board' : '5130d7d41a4de96d7e00373b'});
 		 //Trello.members.get("me", function(member){
@@ -43,7 +45,12 @@ var trelloParser = {
 								console.log(board.id, board.name);
 								Trello.get('boards/' + board.id + '/actions', {filter : trelloParser.searchCriteria.actionFilter}, function(actions) {
 									$.each(actions, function(index, action) {
+										console.log(action);
+										/*
 										console.log(action.data.card.name);
+										console.log(action.type, action.date);
+										console.log(action.memberCreator.fullName);
+										*/
 									});
 								});
 							}
@@ -120,7 +127,22 @@ var trelloParser = {
 		});		
 	},
 
-	fillData : function(data) {
+	fillData : function(action) {
+		trelloParser.items.push(
+			$('<div/>', {
+				'class': 'my-new-list',
+				html: '<h3>' + action.data.card.name + '</h3>' + 
+					  '<ul>' +
+					      '<li>' + action.memberCreator.fullName + '</li>' +
+					      '<li>' + action.date + '</li>' +
+					      '<li>From: ' + action.data.listBefore.name + '</li>' +
+					      '<li>To: ' + action.data.listAfter.name + '</li>' +
+					      '<li>' + action.date + '</li>' +
+				      '</ul>'
+
+			});
+		);			
+		/*
 		$.each(data, function(key, val) {
 			if(typeof(val) === 'object' && val !== null) {
 				if(key !== 'actions') return true;
@@ -133,6 +155,7 @@ var trelloParser = {
 					trelloParser.items.push('<li id="' + key + '">' + key + ': ' + val + '</li>');
 			}
 		});
+		*/
 	},
 
 	history : function(data) {

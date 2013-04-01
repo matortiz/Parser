@@ -3,6 +3,10 @@
 	text-align: center;*/
 }
 
+input.searchBox {
+	width: 600px;
+}
+
 .details {
 	cursor: pointer;
 }
