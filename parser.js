@@ -31,47 +31,32 @@ var trelloParser = {
 
 		trelloParser.parseSearchString();
 		
-		//boards = Trello.get({'board' : '5130d7d41a4de96d7e00373b'});
-		 //Trello.members.get("me", function(member){
-        	//console.log(member.fullName);
     	Trello.get("members/me/organizations", function(organizations) {
 			$.each(organizations, function(index, organization){
 				if(organization.displayName === trelloParser.searchCriteria.org) {
-					console.log(organization.id, organization.name, organization.displayName);
+					//console.log(organization.id, organization.name, organization.displayName);
+					$('#orgTitle').text(organization.displayName);
 					Trello.get("members/me/boards", function(boards) {
 						$.each(boards, function(index, board) {
 							//console.log(board.id, board.name);
 							if(board.name === trelloParser.searchCriteria.board) {
-								console.log(board.id, board.name);
+								$('#boardTitle').text(board.name);
+								//console.log(board.id, board.name);
 								Trello.get('boards/' + board.id + '/actions', {filter : trelloParser.searchCriteria.actionFilter}, function(actions) {
 									$.each(actions, function(index, action) {
-										console.log(action);
-										/*
-										console.log(action.data.card.name);
-										console.log(action.type, action.date);
-										console.log(action.memberCreator.fullName);
-										*/
+										//console.log(action.data.listBefore);
+										if(action.data.listBefore !== undefined)
+											trelloParser.fillData(action);
 									});
+									trelloParser.printData();
 								});
+								
 							}
 						});
 					});
 				}
 			});
     	});
-		/*
-		 Trello.get("members/me/cards", function(cards) {
-            //$cards.empty();
-            $.each(cards, function(ix, card) {
-            	console.log(card.name);
-            });  
-        });
-*/
-
-	//	});
-		
-		//console.log(boards);
-
 	},
 	authorizeOk : function() {
 		alert('Hell yeah!!');
@@ -81,16 +66,6 @@ var trelloParser = {
 		alert('Ops! not gonna happen');
 	},
 	
-	loadFile : function() {
-		$.getJSON('css.json', function(data) {
-			trelloParser.board.id = data.id;
-			trelloParser.board.name = data.name;
-			trelloParser.board.description = data.desc;
-			console.log(trelloParser.board);
-			//trelloParser.fillData(data);
-			//trelloParser.printData();
-		});
-	},
 //org:infraestrutura actionFilter:updateCard
 	parseSearchString : function() {
 		trelloParser.initSearchCriteria();
@@ -105,7 +80,7 @@ var trelloParser = {
 			trelloParser.searchCriteria[criteria[0]] = criteria[1];
 		});
 
-		console.log(trelloParser.searchCriteria);
+		//console.log(trelloParser.searchCriteria);
 /*
 		var searchCriteria = {
 			fromList : '',
@@ -116,7 +91,7 @@ var trelloParser = {
 */
 		//return searchCriteria;
 	},
-
+/*
 	fileIterator : function(data) {
 		$.each(data, function(key, val) {
 			if(typeof(val) === 'object' && val !== null) {
@@ -126,44 +101,24 @@ var trelloParser = {
 			}
 		});		
 	},
-
+*/
 	fillData : function(action) {
 		trelloParser.items.push(
-			$('<div/>', {
-				'class': 'my-new-list',
-				html: '<h3>' + action.data.card.name + '</h3>' + 
-					  '<ul>' +
-					      '<li>' + action.memberCreator.fullName + '</li>' +
-					      '<li>' + action.date + '</li>' +
-					      '<li>From: ' + action.data.listBefore.name + '</li>' +
-					      '<li>To: ' + action.data.listAfter.name + '</li>' +
-					      '<li>' + action.date + '</li>' +
-				      '</ul>'
-
-			});
+			'<div class="my-new-list">' +
+				'<h3>' + action.data.card.name + '</h3>' + 
+				'<ul>' +
+					'<li>' + action.memberCreator.fullName + '</li>' +
+					'<li>' + action.date + '</li>' +
+					'<li>From: ' + action.data.listBefore.name + '</li>' +
+					'<li>To: ' + action.data.listAfter.name + '</li>' +
+					'<li>' + action.date + '</li>' +
+				'</ul>'
 		);			
-		/*
-		$.each(data, function(key, val) {
-			if(typeof(val) === 'object' && val !== null) {
-				if(key !== 'actions') return true;
-				trelloParser.history(val);
-				//trelloParser.items.push('<li><h3>' + key + '</h3></li>');
-				trelloParser.items.push('<li><h3>' + key + ' <span class="details">-</span></h3></li>');
-				trelloParser.fillData(val != 'null' ? val : key);
-			} else {
-				//if(val === 'fabianemsantos')
-					trelloParser.items.push('<li id="' + key + '">' + key + ': ' + val + '</li>');
-			}
-		});
-		*/
-	},
-
-	history : function(data) {
-
 	},
 
 	printData : function() {
-		$('<ul/>', {
+		//console.log(trelloParser.items);
+		$('<div/>', {
 			'class': 'my-new-list',
 			html: trelloParser.items.join('')
 		}).appendTo('.results');	
