@@ -31,6 +31,10 @@ var trelloParser = {
 
 		trelloParser.parseSearchString();
 		
+		//Hay que meter estas dos lineas dentro de un metodo clearScreen o una cosa asi
+		trelloParser.items = [];
+		$('div.my-new-list').remove();
+
     	Trello.get("members/me/organizations", function(organizations) {
 			$.each(organizations, function(index, organization){
 				if(organization.displayName === trelloParser.searchCriteria.org) {
@@ -69,12 +73,15 @@ var trelloParser = {
 //org:infraestrutura actionFilter:updateCard
 	parseSearchString : function() {
 		trelloParser.initSearchCriteria();
-		var string = $('.searchBox').val(), pattern = /[a-zA-Z]+:[a-zA-Z0-9,]+/g, matches;
+		//var string = $('.searchBox').val(), pattern = /[a-zA-Z]+:[a-zA-Z0-9,]+ ?/g, matches;
+		var string = $('.searchBox').val(), pattern = /[a-zA-Z0-9]+:\b[a-zA-Z0-9 ]+\b(?!:)/g, matches;
 
 		matches = string.match(pattern);
+		console.log(matches);
 
 
 		$.each(matches, function(index, data) {
+			data = data.trim();
 			var criteria = data.split(':');
 			if(trelloParser.validSearchKeys.indexOf(criteria[0]) === -1) return true;
 			trelloParser.searchCriteria[criteria[0]] = criteria[1];
