@@ -10,3 +10,14 @@ input.searchBox {
 .details {
 	cursor: pointer;
 }
+
+li {
+	float: left;
+	list-style: none;
+	padding: 10px;
+}
+
+.my-new-list {
+	display: inline-block;
+	min-width: 670px;
+}

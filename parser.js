@@ -12,7 +12,9 @@ var trelloParser = {
 	boardName : 'Sprint 5',
 	actionsFilter : 'updateCard',
 	validSearchKeys : ['org', 'board', 'actionFilter'],
+	validFilterKeys : ['by', 'fromList', 'toList'],
 	searchCriteria : [],
+	filterCriteria : [],
 	defaultConfiguration : {
 		org : 'Infraestrutura',
 		board : 'Sprint 5',
@@ -79,7 +81,6 @@ var trelloParser = {
 		matches = string.match(pattern);
 		console.log(matches);
 
-
 		$.each(matches, function(index, data) {
 			data = data.trim();
 			var criteria = data.split(':');
@@ -98,6 +99,42 @@ var trelloParser = {
 */
 		//return searchCriteria;
 	},
+	parseFilterString : function() {
+		var matches = trelloParser.getMatches($('.filterBox').val());
+
+		//console.log(matches);
+
+		$.each(matches, function(index, data) {
+			data = data.trim();
+			console.log(data);
+			var criteria = data.split(':');
+			if(trelloParser.validFilterKeys.indexOf(criteria[0]) === -1) return true;
+			trelloParser.filterCriteria[criteria[0]] = criteria[1].toLowerCase();
+			console.log('tre');
+		});
+		//console.log(trelloParser.filterCriteria);
+		trelloParser.filter();
+	},
+	filter : function() {
+		//muestro todos y elimino el attt
+		console.log('llego');
+		$('div.my-new-list').removeAttr('__remain').show();
+
+		//Hacer refactor de este for in por dios...
+		for(var propt in trelloParser.filterCriteria) {
+			console.log('li[__' + propt + '=' + trelloParser.filterCriteria[propt] + ']');
+			$('li[__' + propt + '=' + trelloParser.filterCriteria[propt] + ']').parents('div.my-new-list').attr('__remain', true);
+		}
+		$('div.my-new-list[__remain!=true]').hide('slow');
+		//$('div.my-new-list[__remain!=true]').hide('slow');
+	},
+	getMatches : function(searchString) {
+		var string = searchString, pattern = /[a-zA-Z0-9]+:\b[a-zA-Z0-9 ]+\b(?!:)/g, matches;
+
+		matches = string.match(pattern);
+		//console.log(matches);
+		return matches;
+	},
 /*
 	fileIterator : function(data) {
 		$.each(data, function(key, val) {
@@ -113,13 +150,14 @@ var trelloParser = {
 		trelloParser.items.push(
 			'<div class="my-new-list">' +
 				'<h3>' + action.data.card.name + '</h3>' + 
-				'<ul>' +
+				'<ul __by="' + action.memberCreator.fullName.toLowerCase() + '" __fromList="' + action.data.listBefore.name.toLowerCase() + '" __toList="' + action.data.listAfter.name.toLowerCase() + '">' +
 					'<li>' + action.memberCreator.fullName + '</li>' +
 					'<li>' + action.date + '</li>' +
 					'<li>From: ' + action.data.listBefore.name + '</li>' +
 					'<li>To: ' + action.data.listAfter.name + '</li>' +
 					'<li>' + action.date + '</li>' +
-				'</ul>'
+				'</ul>' +
+			'</div>'
 		);			
 	},
 

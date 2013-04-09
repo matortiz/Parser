@@ -3,13 +3,17 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<script src="jquery.min.js"></script>
-	<script src="https://api.trello.com/1/client.js?key=67137207c73fd041b4c903ec4effc5ca"></script>
+	<!--<script src="https://api.trello.com/1/client.js?key=67137207c73fd041b4c903ec4effc5ca"></script>-->
 	<script>
 		$(document).ready(function(){
 			//trelloParser.init();
 			$('#searchBtn').click( function() {
-				//trelloParser.parseSearchString();
-				trelloParser.init();
+				trelloParser.parseSearchString();
+				//trelloParser.init();
+			});
+			$('#filterBtn').click( function() {
+				trelloParser.parseFilterString();
+				//trelloParser.init();
 			});
 
 			$(".details").click(function(){
@@ -28,7 +32,51 @@
            <h4>Organization: <span id="orgTitle"></span></h4>
            <h4>Board: <span id="boardTitle"></span></h4>
         </div>
-		<section class="results"></section>
+        <hr />
+        <input type="text" class="filterBox" name="filter" value="fromList:QA toList:Done">
+        <input type="button" value="filter" id="filterBtn">
+		<section class="results">
+			<div class="my-new-list">
+				<h3>Card 100</h3>
+				<ul> 
+					<li __by="william">William</li> 
+					<li __date="action.date">action.date</li> 
+					<li __fromList="to do">From: To Do</li> 
+					<li __toList="doing">To: Doing</li> 
+					<li __date2="action.date">action.date</li> 
+				</ul>
+			</div>
+			<div class="my-new-list"> 
+				<h3>Card 200</h3>
+				<ul> 
+					<li __by="rodrigo">Rodrigo</li> 
+					<li __date="action.date">action.date</li> 
+					<li __fromList="doing">From: Doing</li> 
+					<li __toList="qa">To: QA</li> 
+					<li __date2="action.date">action.date</li> 
+				</ul>
+			</div>
+			<div class="my-new-list"> 
+				<h3>Card 300</h3>
+				<ul __by="dhiego" __fromList="doing"> 
+					<li __by="dhiego">Dhiego</li> 
+					<li __date="action.date">action.date</li> 
+					<li __fromList="doing">From: Doing</li> 
+					<li __toList="qa">To: QA</li> 
+					<li __date2="action.date">action.date</li> 
+				</ul>
+			</div>
+			<div class="my-new-list"> 
+				<h3>Card 400</h3>
+				<ul> 
+					<li __by="william">William</li> 
+					<li __date="action.date">action.date</li> 
+					<li __fromList="qa">From: QA</li> 
+					<li __toList="done">To: Done</li> 
+					<li __date2="action.date">action.date</li> 
+				</ul>
+			</div>
+		</section>
 	</section>
 	<script src="parser.js"></script>
 </body>
