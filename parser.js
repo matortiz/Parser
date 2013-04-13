@@ -1,3 +1,10 @@
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
 var trelloParser = {
 	items : [],
 	blocks : [],
@@ -79,7 +86,7 @@ var trelloParser = {
 		var string = $('.searchBox').val(), pattern = /[a-zA-Z0-9]+:\b[a-zA-Z0-9 ]+\b(?!:)/g, matches;
 
 		matches = string.match(pattern);
-		console.log(matches);
+		//console.log(matches);
 
 		$.each(matches, function(index, data) {
 			data = data.trim();
@@ -103,30 +110,36 @@ var trelloParser = {
 		var matches = trelloParser.getMatches($('.filterBox').val());
 
 		//console.log(matches);
-
-		$.each(matches, function(index, data) {
-			data = data.trim();
-			console.log(data);
-			var criteria = data.split(':');
-			if(trelloParser.validFilterKeys.indexOf(criteria[0]) === -1) return true;
-			trelloParser.filterCriteria[criteria[0]] = criteria[1].toLowerCase();
-			console.log('tre');
-		});
+		trelloParser.filterCriteria = [];		
+		console.log(matches);
+		if(matches !== null) {
+			$.each(matches, function(index, data) {
+				console.log('no deberia estar aca');
+				data = data.trim();
+				//console.log(data);
+				var criteria = data.split(':');
+				if(trelloParser.validFilterKeys.indexOf(criteria[0]) === -1) return true;
+				trelloParser.filterCriteria[criteria[0].toLowerCase()] = criteria[1].toLowerCase();
+				//console.log('tre');
+			});
+		}
 		//console.log(trelloParser.filterCriteria);
 		trelloParser.filter();
 	},
 	filter : function() {
 		//muestro todos y elimino el attt
-		console.log('llego');
+		//console.log('llego');
 		$('div.my-new-list').removeAttr('__remain').show();
 
-		//Hacer refactor de este for in por dios...
-		for(var propt in trelloParser.filterCriteria) {
-			console.log('li[__' + propt + '=' + trelloParser.filterCriteria[propt] + ']');
-			$('li[__' + propt + '=' + trelloParser.filterCriteria[propt] + ']').parents('div.my-new-list').attr('__remain', true);
+		if(Object.size(trelloParser.filterCriteria) > 0) {
+			//Hacer refactor de este for in por dios...
+			for(var propt in trelloParser.filterCriteria) {
+				//console.log('li[__' + propt + '=' + trelloParser.filterCriteria[propt] + ']');
+				$('li[__' + propt + '="' + trelloParser.filterCriteria[propt] + '"]').parents('div.my-new-list').attr('__remain', true);
+			}
+			$('div.my-new-list[__remain!=true]').hide('slow');
+			//$('div.my-new-list[__remain!=true]').hide('slow');
 		}
-		$('div.my-new-list[__remain!=true]').hide('slow');
-		//$('div.my-new-list[__remain!=true]').hide('slow');
 	},
 	getMatches : function(searchString) {
 		var string = searchString, pattern = /[a-zA-Z0-9]+:\b[a-zA-Z0-9 ]+\b(?!:)/g, matches;
@@ -150,11 +163,11 @@ var trelloParser = {
 		trelloParser.items.push(
 			'<div class="my-new-list">' +
 				'<h3>' + action.data.card.name + '</h3>' + 
-				'<ul __by="' + action.memberCreator.fullName.toLowerCase() + '" __fromList="' + action.data.listBefore.name.toLowerCase() + '" __toList="' + action.data.listAfter.name.toLowerCase() + '">' +
-					'<li>' + action.memberCreator.fullName + '</li>' +
+				'<ul __by="' + action.memberCreator.fullName.toLowerCase() + '" __fromlist="' + action.data.listBefore.name.toLowerCase() + '" __tolist="' + action.data.listAfter.name.toLowerCase() + '">' +
+					'<li __by="' + action.memberCreator.fullName.toLowerCase() + '">' + action.memberCreator.fullName + '</li>' +
 					'<li>' + action.date + '</li>' +
-					'<li>From: ' + action.data.listBefore.name + '</li>' +
-					'<li>To: ' + action.data.listAfter.name + '</li>' +
+					'<li __fromlist="' + action.data.listBefore.name.toLowerCase() + '">From: ' + action.data.listBefore.name + '</li>' +
+					'<li__tolist="' + action.data.listAfter.name.toLowerCase() + '">To: ' + action.data.listAfter.name + '</li>' +
 					'<li>' + action.date + '</li>' +
 				'</ul>' +
 			'</div>'

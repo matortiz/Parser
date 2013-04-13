@@ -3,13 +3,13 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<script src="jquery.min.js"></script>
-	<!--<script src="https://api.trello.com/1/client.js?key=67137207c73fd041b4c903ec4effc5ca"></script>-->
+	<script src="https://api.trello.com/1/client.js?key=67137207c73fd041b4c903ec4effc5ca"></script>
 	<script>
 		$(document).ready(function(){
 			//trelloParser.init();
 			$('#searchBtn').click( function() {
-				trelloParser.parseSearchString();
-				//trelloParser.init();
+				//trelloParser.parseSearchString();
+				trelloParser.init();
 			});
 			$('#filterBtn').click( function() {
 				trelloParser.parseFilterString();
@@ -36,6 +36,7 @@
         <input type="text" class="filterBox" name="filter" value="fromList:QA toList:Done">
         <input type="button" value="filter" id="filterBtn">
 		<section class="results">
+			<!--
 			<div class="my-new-list">
 				<h3>Card 100</h3>
 				<ul> 
@@ -76,6 +77,7 @@
 					<li __date2="action.date">action.date</li> 
 				</ul>
 			</div>
+		-->
 		</section>
 	</section>
 	<script src="parser.js"></script>
