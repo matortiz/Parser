@@ -5,6 +5,7 @@ Object.size = function(obj) {
     }
     return size;
 };
+//Transformar esto en un objeto de verdad, mover los métodos dentro del prototype, limpiar la mugre y definir el constructor
 var trelloParser = {
 	items : [],
 	blocks : [],
@@ -29,6 +30,7 @@ var trelloParser = {
 	},
 	initSearchCriteria : function() {
 		$.each(trelloParser.validSearchKeys, function(index, data) {
+			//refactor eval
 			trelloParser.searchCriteria[data] = eval('trelloParser.defaultConfiguration.' + data);
 		});
 	},
@@ -50,9 +52,11 @@ var trelloParser = {
 					//console.log(organization.id, organization.name, organization.displayName);
 					$('#orgTitle').text(organization.displayName);
 					Trello.get("members/me/boards", function(boards) {
+						console.log(organization.id);
+						console.log(boards);
 						$.each(boards, function(index, board) {
-							//console.log(board.id, board.name);
-							if(board.name === trelloParser.searchCriteria.board) {
+						//	console.log(board.id, board.name, board.idOrganization);
+							if(board.name === trelloParser.searchCriteria.board && board.idOrganization === organization.id) {
 								$('#boardTitle').text(board.name);
 								//console.log(board.id, board.name);
 								Trello.get('boards/' + board.id + '/actions', {filter : trelloParser.searchCriteria.actionFilter}, function(actions) {
@@ -160,6 +164,7 @@ var trelloParser = {
 	},
 */
 	fillData : function(action) {
+		console.log(action.memberCreator);
 		trelloParser.items.push(
 			'<div class="my-new-list">' +
 				'<h3>' + action.data.card.name + '</h3>' + 
@@ -167,7 +172,7 @@ var trelloParser = {
 					'<li __by="' + action.memberCreator.fullName.toLowerCase() + '">' + action.memberCreator.fullName + '</li>' +
 					'<li>' + action.date + '</li>' +
 					'<li __fromlist="' + action.data.listBefore.name.toLowerCase() + '">From: ' + action.data.listBefore.name + '</li>' +
-					'<li__tolist="' + action.data.listAfter.name.toLowerCase() + '">To: ' + action.data.listAfter.name + '</li>' +
+					'<li __tolist="' + action.data.listAfter.name.toLowerCase() + '">To: ' + action.data.listAfter.name + '</li>' +
 					'<li>' + action.date + '</li>' +
 				'</ul>' +
 			'</div>'
