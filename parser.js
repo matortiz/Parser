@@ -28,6 +28,9 @@ var trelloParser = {
 		board : 'Sprint 5',
 		actionFilter : 'updateCard'
 	},
+	emptyListMock : {
+		name : 'noList'
+	},
 	initSearchCriteria : function() {
 		$.each(trelloParser.validSearchKeys, function(index, data) {
 			//refactor eval
@@ -37,8 +40,11 @@ var trelloParser = {
 
 	init : function() {
 		//Trello.deauthorize();
+		console.log(Trello.authorized());
+		
 		if(!Trello.authorized())
-			Trello.authorize({type : 'popup', success: trelloParser.authorizeOk});
+			Trello.authorize({type : 'popup', success: trelloParser.authorizeOk, error: trelloParser.authorizeError});
+		console.log(Trello.authorized());
 
 		trelloParser.parseSearchString();
 		
@@ -60,10 +66,18 @@ var trelloParser = {
 								$('#boardTitle').text(board.name);
 								//console.log(board.id, board.name);
 								Trello.get('boards/' + board.id + '/actions', {filter : trelloParser.searchCriteria.actionFilter}, function(actions) {
+									console.log(actions);
 									$.each(actions, function(index, action) {
-										//console.log(action.data.listBefore);
-										if(action.data.listBefore !== undefined)
-											trelloParser.fillData(action);
+										console.log(action.data.listBefore);
+										//Ver estos mock horribles, hacer una solución genérica
+										//Por lo menos, poner en lugar de noList la lista en la que está ahora
+										if(action.data.listBefore === undefined) {
+											action.data.listBefore = trelloParser.emptyListMock;
+										}
+										if(action.data.listAfter === undefined) {
+											action.data.listAfter = trelloParser.emptyListMock;
+										}
+										trelloParser.fillData(action);
 									});
 									trelloParser.printData();
 								});
@@ -87,7 +101,7 @@ var trelloParser = {
 	parseSearchString : function() {
 		trelloParser.initSearchCriteria();
 		//var string = $('.searchBox').val(), pattern = /[a-zA-Z]+:[a-zA-Z0-9,]+ ?/g, matches;
-		var string = $('.searchBox').val(), pattern = /[a-zA-Z0-9]+:\b[a-zA-Z0-9 ]+\b(?!:)/g, matches;
+		var string = $('.searchBox').val(), pattern = /[a-zA-Z0-9]+:\b[a-zA-Z0-9\- ]+\b(?!:)/g, matches;
 
 		matches = string.match(pattern);
 		//console.log(matches);
@@ -136,11 +150,15 @@ var trelloParser = {
 		$('div.my-new-list').removeAttr('__remain').show();
 
 		if(Object.size(trelloParser.filterCriteria) > 0) {
+			var filterAttributes = '';
 			//Hacer refactor de este for in por dios...
 			for(var propt in trelloParser.filterCriteria) {
 				//console.log('li[__' + propt + '=' + trelloParser.filterCriteria[propt] + ']');
-				$('li[__' + propt + '="' + trelloParser.filterCriteria[propt] + '"]').parents('div.my-new-list').attr('__remain', true);
+				//$('li[__' + propt + '="' + trelloParser.filterCriteria[propt] + '"]').parents('div.my-new-list').attr('__remain', true);
+				filterAttributes += '[__' + propt + '="' + trelloParser.filterCriteria[propt] + '"]';
 			}
+			console.log(filterAttributes);
+			$('ul' + filterAttributes).parents('div.my-new-list').attr('__remain', true);
 			$('div.my-new-list[__remain!=true]').hide('slow');
 			//$('div.my-new-list[__remain!=true]').hide('slow');
 		}
