@@ -26,7 +26,8 @@ var trelloParser = {
 	defaultConfiguration : {
 		org : 'Infraestrutura',
 		board : 'Sprint 5',
-		actionFilter : 'updateCard'
+		actionFilter : 'addAttachmentToCard,addChecklistToCard,addMemberToCard,commentCard,copyCommentCard,convertToCardFromCheckItem,createCard,copyCard,deleteAttachmentFromCard,moveCardFromBoard,moveCardToBoard,removeChecklistFromCard,updateCard:idList,updateCard:closed,updateCard:desc,updateCard:name,updateCheckItemStateOnCard',
+		actionLimit : '1000'
 	},
 	emptyListMock : {
 		name : 'noList'
@@ -65,7 +66,7 @@ var trelloParser = {
 							if(board.name === trelloParser.searchCriteria.board && board.idOrganization === organization.id) {
 								$('#boardTitle').text(board.name);
 								//console.log(board.id, board.name);
-								Trello.get('boards/' + board.id + '/actions', {filter : trelloParser.searchCriteria.actionFilter}, function(actions) {
+								Trello.get('boards/' + board.id + '/actions', {filter : trelloParser.searchCriteria.actionFilter, limit: trelloParser.defaultConfiguration.actionLimit}, function(actions) {
 									console.log(actions);
 									$.each(actions, function(index, action) {
 										console.log(action.data.listBefore);
