@@ -35,8 +35,11 @@
         <hr />
         <input type="text" class="filterBox" name="filter" value="fromList:QA toList:Done">
         <input type="button" value="filter" id="filterBtn">
+        <a class="uiLink" onclick="trelloParser.listCards()">List Cards</a>
+        <a class="uiLink" onclick="trelloParser.restoreCards()">Restore Cards</a>
+        <!--
 		<section class="results">
-			<!--
+			
 			<div class="my-new-list">
 				<h3>Card 100</h3>
 				<ul> 
@@ -77,8 +80,9 @@
 					<li __date2="action.date">action.date</li> 
 				</ul>
 			</div>
-		-->
+		
 		</section>
+		-->
 	</section>
 	<script src="parser.js"></script>
 </body>

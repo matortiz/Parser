@@ -17,7 +17,28 @@ li {
 	padding: 10px;
 }
 
+.my-new-list, .my-new-list-condensed {
+	min-width: 770px;
+	font-size: 12px;
+}
+
 .my-new-list {
 	display: inline-block;
-	min-width: 770px;
+}
+
+.my-new-list ul {
+	padding: 0;
+	margin: 0;
+}
+
+.my-new-list h3, .my-new-list-condensed h3 {
+	background-color: lightblue;
+	margin-bottom: 0;
+}
+
+.uiLink {
+	color: blue;
+	text-decoration: none;
+	margin-left: 10px;
+	cursor: pointer;
 }

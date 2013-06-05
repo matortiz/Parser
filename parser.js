@@ -200,9 +200,28 @@ var trelloParser = {
 
 	printData : function() {
 		//console.log(trelloParser.items);
-		$('<div/>', {
-			'class': 'my-new-list',
+		$('<section/>', {
+			'class': 'results',
 			html: trelloParser.items.join('')
-		}).appendTo('.results');	
+		}).appendTo('#mainContainer');	
+	},
+
+	listCards : function() {
+		$('.my-new-list ul').hide();
+		var repeatedText = [];
+		$('.my-new-list h3').each(function() {
+			if(repeatedText[$(this).text()])
+				$(this).hide();
+			else
+				repeatedText[$(this).text()] = $(this).text();
+		});
+		$('.my-new-list').toggleClass('my-new-list-condensed');
+		$('.my-new-list-condensed').removeClass('my-new-list');
+	},
+
+	restoreCards : function() {
+		$('.my-new-list-condensed').children('h3,ul').show();
+		$('.my-new-list-condensed').toggleClass('my-new-list');
+		$('.my-new-list').removeClass('my-new-list-condensed');
 	}
 };
