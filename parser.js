@@ -20,7 +20,7 @@ var trelloParser = {
 	boardName : 'Sprint 5',
 	actionsFilter : 'updateCard',
 	validSearchKeys : ['org', 'board', 'actionFilter'],
-	validFilterKeys : ['by', 'fromList', 'toList'],
+	validFilterKeys : ['by', 'fromList', 'toList', 'title'],
 	searchCriteria : [],
 	filterCriteria : [],
 	defaultConfiguration : {
@@ -156,7 +156,7 @@ var trelloParser = {
 			for(var propt in trelloParser.filterCriteria) {
 				//console.log('li[__' + propt + '=' + trelloParser.filterCriteria[propt] + ']');
 				//$('li[__' + propt + '="' + trelloParser.filterCriteria[propt] + '"]').parents('div.my-new-list').attr('__remain', true);
-				filterAttributes += '[__' + propt + '="' + trelloParser.filterCriteria[propt] + '"]';
+				filterAttributes += '[__' + propt + '*="' + trelloParser.filterCriteria[propt] + '"]';
 			}
 			console.log(filterAttributes);
 			$('ul' + filterAttributes).parents('div.my-new-list').attr('__remain', true);
@@ -186,13 +186,13 @@ var trelloParser = {
 		console.log(action.memberCreator);
 		trelloParser.items.push(
 			'<div class="my-new-list">' +
-				'<h3>' + action.data.card.name + '</h3>' + 
-				'<ul __by="' + action.memberCreator.fullName.toLowerCase() + '" __fromlist="' + action.data.listBefore.name.toLowerCase() + '" __tolist="' + action.data.listAfter.name.toLowerCase() + '">' +
-					'<li __by="' + action.memberCreator.fullName.toLowerCase() + '">' + action.memberCreator.fullName + '</li>' +
-					'<li>' + action.date + '</li>' +
+				'<h3 __title="' + action.data.card.name + '">' + action.data.card.name + '</h3>' + 
+				'<ul __by="' + action.memberCreator.fullName.toLowerCase() + '" __fromlist="' + action.data.listBefore.name.toLowerCase() + '" __tolist="' + action.data.listAfter.name.toLowerCase() + '" __title="' + action.data.card.name.toLowerCase() + '">' +
+					'<li __by="' + action.memberCreator.fullName.toLowerCase() + '">By: ' + action.memberCreator.fullName + '</li>' +
+					'<li>Type: ' + action.type + '</li>' +
 					'<li __fromlist="' + action.data.listBefore.name.toLowerCase() + '">From: ' + action.data.listBefore.name + '</li>' +
 					'<li __tolist="' + action.data.listAfter.name.toLowerCase() + '">To: ' + action.data.listAfter.name + '</li>' +
-					'<li>' + action.date + '</li>' +
+					'<li>Date: ' + trelloParser.formatDate(action.date) + '</li>' +
 				'</ul>' +
 			'</div>'
 		);			
@@ -223,5 +223,13 @@ var trelloParser = {
 		$('.my-new-list-condensed').children('h3,ul').show();
 		$('.my-new-list-condensed').toggleClass('my-new-list');
 		$('.my-new-list').removeClass('my-new-list-condensed');
+	},
+
+	formatDate : function(dateString) {
+		var d = new Date(dateString), retDate = '';
+		retDate = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+		return retDate;
 	}
+
+
 };
